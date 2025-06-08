@@ -1,0 +1,119 @@
+# Dataset completo - demasiado grande para Git
+data/raw/Multi_Label_dataset/
+data/raw/Multi_Label_dataset/**
+
+# Entornos virtuales de Python
+env/
+venv/
+ENV/
+VENV/
+.env
+.venv
+.ENV
+.VENV
+
+# Directorios de librerías y dependencias
+lib/
+lib64/
+Lib/
+Scripts/
+Include/
+share/
+pyvenv.cfg
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+*.tmp
+*.temp
+~*
+
+# Archivos de log
+*.log
+logs/
+
+# Archivos temporales de modelos grandes (opcional - descomentar si son muy grandes)
+# data/models/*.h5
+# data/models/*.pkl
+
+# Checkpoints temporales de entrenamiento
+data/models/training_checkpoints/temp_*
+data/models/training_checkpoints/checkpoint_*
+
+# Archivos de configuración local
+config_local.py
+settings_local.py
