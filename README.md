@@ -469,4 +469,6 @@ movie_recommendation_system/
 └── main.py
 ```
 
-Este proyecto demuestra la efectividad de las redes neuronales convolucionales para el análisis automático de imágenes de películas, estableciendo una base sólida para sistemas de recomendación basados en contenido visual.
+Este proyecto, desarrollado en el marco del módulo Sistemas de Recomendación del Programa Diploma en Inteligencia Artificial Aplicada, tiene como finalidad implementar un sistema de recomendación de películas basado en contenido visual utilizando redes neuronales. Para ello, se emplean redes neuronales convolucionales (CNN) desarrolladas en Python con TensorFlow, enfocadas en el análisis automático de imágenes extraídas del dataset de películas de Kaggle.
+
+A lo largo del desarrollo, se abordaron etapas fundamentales como la carga de imágenes, la construcción y entrenamiento de modelos de redes convolucionales y redes neuronales densas, así como la evaluación de su desempeño mediante métricas clave. El objetivo final fue identificar la arquitectura más eficiente para clasificar o agrupar imágenes de películas, estableciendo una base tecnológica que pueda integrarse en sistemas de recomendación que utilicen características visuales como criterio de sugerencia.
