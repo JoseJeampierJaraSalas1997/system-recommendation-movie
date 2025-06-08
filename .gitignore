@@ -1,6 +1,6 @@
 # Dataset completo - demasiado grande para Git
-data/raw/Multi_Label_dataset/
-data/raw/Multi_Label_dataset/**
+data/
+data/**
 
 # Entornos virtuales de Python
 env/

@@ -5,12 +5,14 @@ from PIL import Image
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MultiLabelBinarizer
 
 class MovieDataPreprocessor:
     def __init__(self, base_path, img_size=(224, 224)):
         self.base_path = base_path
         self.img_size = img_size
         self.label_columns = []
+        self.label_binarizer = MultiLabelBinarizer()
 
     def load_data(self):
         """Carga imágenes y etiquetas desde carpeta Images y train.csv"""
@@ -18,7 +20,10 @@ class MovieDataPreprocessor:
         images_path = os.path.join(self.base_path, 'Images')
 
         df = pd.read_csv(csv_path)
-        self.label_columns = df.columns[2:]  # Ignora Id y Genre
+        genre_labels = df['Genre'].str.split()  # Suponiendo que "Genre" tiene géneros separados por espacio
+
+        self.label_columns = sorted(set(genre for genres in genre_labels for genre in genres))
+        self.label_binarizer.fit([self.label_columns])  # Ajustar el binarizer
 
         X, y = [], []
         for _, row in df.iterrows():
@@ -31,10 +36,50 @@ class MovieDataPreprocessor:
                     img_array = np.array(img) / 255.0
 
                     X.append(img_array)
-                    y.append(row[self.label_columns].values.astype(np.uint8))
+
+                    # Separar los géneros y codificarlos
+                    genres = row['Genre'].split()
+                    y.append(genres)
                 except Exception as e:
                     print(f"Error al procesar {img_file}: {e}")
-        return np.array(X), np.array(y)
+
+        # Binarizar todas las etiquetas
+        y_binary = self.label_binarizer.transform(y)
+        return np.array(X), np.array(y_binary)
+
+    @property
+    def label_encoder(self):
+        return self.label_binarizer
+
+# class MovieDataPreprocessor:
+#     def __init__(self, base_path, img_size=(224, 224)):
+#         self.base_path = base_path
+#         self.img_size = img_size
+#         self.label_columns = []
+
+#     def load_data(self):
+#         """Carga imágenes y etiquetas desde carpeta Images y train.csv"""
+#         csv_path = os.path.join(self.base_path, 'train.csv')
+#         images_path = os.path.join(self.base_path, 'Images')
+
+#         df = pd.read_csv(csv_path)
+#         self.label_columns = df.columns[2:]  # Ignora Id y Genre
+
+#         X, y = [], []
+#         for _, row in df.iterrows():
+#             img_id = row['Id']
+#             img_file = os.path.join(images_path, f"{img_id}.jpg")
+#             if os.path.exists(img_file):
+#                 try:
+#                     img = Image.open(img_file).convert('RGB')
+#                     img = img.resize(self.img_size)
+#                     img_array = np.array(img) / 255.0
+
+#                     X.append(img_array)
+#                     y.append(row[self.label_columns].values.astype(np.uint8))
+#                 except Exception as e:
+#                     print(f"Error al procesar {img_file}: {e}")
+#         return np.array(X), np.array(y)
 
     def create_data_splits(self, X, y, test_size=0.2, val_size=0.1):
         """Divide el dataset respetando multilabel (sin stratify por ahora)"""

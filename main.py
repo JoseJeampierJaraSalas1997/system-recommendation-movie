@@ -244,7 +244,7 @@ def main():
     print("3. EVALUACIÓN DE MODELOS")
     print("="*70)
     
-    evaluator = ModelEvaluator(classes=preprocessor.label_columns)
+    evaluator = ModelEvaluator(label_encoder=preprocessor.label_columns)
     
     # Evaluar CNN
     print("\n📊 EVALUANDO CNN...")

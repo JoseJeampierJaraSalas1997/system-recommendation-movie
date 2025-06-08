@@ -9,30 +9,65 @@ class ModelEvaluator:
     def __init__(self, label_encoder):
         self.label_encoder = label_encoder
         
+    # def evaluate_model(self, model, X_test, y_test):
+    #     """Evaluar modelo y calcular métricas"""
+    #     # Predicciones
+    #     y_pred_proba = model.predict(X_test, verbose=0)
+    #     y_pred = np.argmax(y_pred_proba, axis=1)
+    #     y_true = np.argmax(y_test, axis=1)
+        
+    #     # Métricas
+    #     accuracy = accuracy_score(y_true, y_pred)
+    #     precision = precision_score(y_true, y_pred, average='weighted')
+    #     recall = recall_score(y_true, y_pred, average='weighted')
+    #     f1 = f1_score(y_true, y_pred, average='weighted')
+        
+    #     metrics = {
+    #         'accuracy': accuracy,
+    #         'precision': precision,
+    #         'recall': recall,
+    #         'f1_score': f1
+    #     }
+        
+    #     # Reporte de clasificación
+    #     class_names = self.label_encoder.classes_
+    #     report = classification_report(y_true, y_pred, target_names=class_names, output_dict=True)
+        
+    #     return metrics, report, y_pred, y_pred_proba
     def evaluate_model(self, model, X_test, y_test):
-        """Evaluar modelo y calcular métricas"""
+        """Evaluar modelo y calcular métricas con manejo seguro de clases"""
         # Predicciones
         y_pred_proba = model.predict(X_test, verbose=0)
         y_pred = np.argmax(y_pred_proba, axis=1)
         y_true = np.argmax(y_test, axis=1)
-        
-        # Métricas
+
+        # Métricas (weighted para multiclase)
         accuracy = accuracy_score(y_true, y_pred)
-        precision = precision_score(y_true, y_pred, average='weighted')
-        recall = recall_score(y_true, y_pred, average='weighted')
-        f1 = f1_score(y_true, y_pred, average='weighted')
-        
+        precision = precision_score(y_true, y_pred, average='weighted', zero_division=0)
+        recall = recall_score(y_true, y_pred, average='weighted', zero_division=0)
+        f1 = f1_score(y_true, y_pred, average='weighted', zero_division=0)
+
         metrics = {
             'accuracy': accuracy,
             'precision': precision,
             'recall': recall,
             'f1_score': f1
         }
-        
-        # Reporte de clasificación
-        class_names = self.label_encoder.classes_
-        report = classification_report(y_true, y_pred, target_names=class_names, output_dict=True)
-        
+
+        # Obtener solo las clases presentes en y_true o y_pred para evitar errores
+        present_classes = np.unique(np.concatenate((y_true, y_pred)))
+        class_names = [self.label_encoder.classes_[i] for i in present_classes]
+
+        # Generar reporte con manejo seguro de clases
+        report = classification_report(
+            y_true,
+            y_pred,
+            labels=present_classes,
+            target_names=class_names,
+            output_dict=True,
+            zero_division=0
+        )
+
         return metrics, report, y_pred, y_pred_proba
     
     def plot_confusion_matrix(self, y_true, y_pred, model_name, save_path):
