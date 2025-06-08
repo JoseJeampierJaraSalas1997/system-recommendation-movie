@@ -7,7 +7,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCh
 from tensorflow.keras.metrics import Precision, Recall, BinaryAccuracy
 
 class MLPModel:
-    def __init__(self, input_shape=(224, 224, 3), num_classes=25):  # ✅ Cambiado a 25 clases
+    def __init__(self, input_shape=(224, 224, 3), num_classes=25):
         self.input_shape = input_shape
         self.num_classes = num_classes
         self.model = None
@@ -25,16 +25,14 @@ class MLPModel:
             model.add(BatchNormalization(name=f'batch_norm_{i+1}'))
             model.add(Dropout(dropout, name=f'dropout_{i+1}'))
         
-        # ✅ CAPA DE SALIDA CORREGIDA - sigmoid para multi-etiqueta
         model.add(Dense(self.num_classes, activation='sigmoid', name='output'))
         
-        # ✅ COMPILACIÓN CORREGIDA - binary_crossentropy para multi-etiqueta
         model.compile(
             optimizer=Adam(learning_rate=0.001),
-            loss='binary_crossentropy',  # ✅ Cambiado de sparse_categorical_crossentropy
+            loss='binary_crossentropy', 
             metrics=[
                 'accuracy', 
-                BinaryAccuracy(name='binary_accuracy'),  # ✅ Añadido
+                BinaryAccuracy(name='binary_accuracy'),
                 Precision(name='precision'), 
                 Recall(name='recall')
             ]
@@ -50,13 +48,13 @@ class MLPModel:
         
         return [
             EarlyStopping(
-                monitor='val_binary_accuracy',  # ✅ Cambiado a binary_accuracy
+                monitor='val_binary_accuracy',
                 patience=20,
                 restore_best_weights=True,
                 verbose=1
             ),
             ReduceLROnPlateau(
-                monitor='val_binary_accuracy',  # ✅ Cambiado a binary_accuracy
+                monitor='val_binary_accuracy',
                 factor=0.3,
                 patience=10,
                 min_lr=1e-7,
@@ -64,7 +62,7 @@ class MLPModel:
             ),
             ModelCheckpoint(
                 filepath=f'data/models/{model_name}_best.h5',
-                monitor='val_binary_accuracy',  # ✅ Cambiado a binary_accuracy
+                monitor='val_binary_accuracy',
                 save_best_only=True,
                 verbose=1
             )

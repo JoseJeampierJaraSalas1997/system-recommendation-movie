@@ -1,3 +1,84 @@
+## 🎬 Introducción
+
+Este proyecto consiste en el desarrollo de un **Sistema de Recomendación de Películas basado en imágenes**, optimizado para la **clasificación multi-etiqueta** de géneros cinematográficos mediante técnicas de *Deep Learning*. Su finalidad es demostrar cómo las imágenes promocionales (posters) de películas pueden contener información visual suficiente para inferir sus géneros, utilizando redes neuronales profundas como clasificadores automáticos.
+
+### 🔍 Motivación
+
+La mayoría de los sistemas de recomendación actuales se basan en colaborative filtering o contenido textual. Este enfoque propone un cambio de paradigma: explotar directamente las representaciones visuales de las películas para clasificar múltiples géneros de forma simultánea.
+
+---
+
+## 🧪 Etapas y Validaciones del Proyecto
+
+### 1. **Carga y Preprocesamiento de Datos**
+
+* Se parte de un dataset de imágenes etiquetadas con múltiples géneros.
+* El módulo `MovieDataPreprocessor` realiza:
+
+  * Carga eficiente de imágenes desde el sistema de archivos.
+  * Redimensionamiento a 224x224 píxeles.
+  * Estandarización y normalización de los datos.
+  * Conversión de etiquetas a vectores multi-hot para clasificación multiclase.
+  * División del dataset en conjuntos de entrenamiento, validación y prueba con proporciones del 70%, 10% y 20%, respectivamente.
+  * Generación de *data generators* para entrenamiento eficiente en GPU.
+
+✔️ **Validaciones**: Se incluye una verificación explícita de las dimensiones de entrada y salida, consistencia de las etiquetas, y balance de clases.
+
+---
+
+### 2. **Entrenamiento de Modelos Profundos**
+
+Se implementan dos arquitecturas principales para comparar desempeño:
+
+#### 🧠 A. CNN personalizada (`CNNModel`)
+
+* Arquitectura convolucional adaptada para clasificación multi-etiqueta.
+* Incluye normalización batch, capas `ReLU`, `Dropout`, y capa `Dense(sigmoid)` como salida.
+* Entrenamiento con `binary_crossentropy` y métrica `accuracy`.
+
+#### 🧠 B. MLP (`MLPModel`)
+
+* Modelo Perceptrón Multicapa completamente conectado.
+* Se alimenta con imágenes ya vectorizadas (flattened).
+* Utiliza varias capas ocultas con `Dropout` para regularización.
+
+✔️ **Validaciones**:
+
+* Verificación automática de número de parámetros y capas.
+* Guardado y visualización de métricas como precisión, pérdida, y curvas de entrenamiento (loss y accuracy) para cada época.
+* Callbacks para *Early Stopping* y *Model Checkpointing*.
+
+---
+
+### 3. **Evaluación y Métricas**
+
+Ambos modelos se evalúan utilizando un conjunto de prueba independiente mediante el módulo `ModelEvaluator`, que calcula:
+
+* **Accuracy por clase**
+* **Exactitud global (Micro y Macro)**
+* **Métricas multiclase específicas**:
+
+  * Precision
+  * Recall
+  * F1-score
+
+Adicionalmente, se genera un informe de clasificación detallado (`classification_report`) y predicciones probabilísticas para posteriores visualizaciones o ensambles.
+
+✔️ **Validaciones científicas**:
+
+* Uso de métricas validadas para clasificación multi-etiqueta (no se usa `categorical_crossentropy`, sino `binary_crossentropy` con activación `sigmoid`).
+* Evaluación separada por clase y análisis de etiquetas múltiples por muestra.
+
+---
+
+## 🧬 Contribuciones del Proyecto
+
+* Integración modular y escalable de procesamiento, entrenamiento y evaluación.
+* Modelo reproducible con historial de entrenamiento guardado.
+* Posibilidad de extender el sistema a otras tareas de clasificación de imágenes con múltiples etiquetas.
+
+---
+
 **Estructura del Proyecto:**
 ```
 movie_recommendation_system/
